@@ -1,0 +1,4 @@
+build/
+3rdparty/boost/
+3rdparty/liblas/
+3rdparty/liblaszip/

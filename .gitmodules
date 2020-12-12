@@ -1,0 +1,9 @@
+[submodule "3rdparty/liblas/liblas"]
+	path = 3rdparty/liblas/liblas
+	url = https://github.com/AnastaZIuk/libLAS
+[submodule "3rdparty/liblaszip/liblaszip"]
+	path = 3rdparty/liblaszip/liblaszip
+	url = https://github.com/AnastaZIuk/LASzip
+[submodule "3rdparty/boost/boost"]
+	path = 3rdparty/boost/boost
+	url = https://github.com/boostorg/boost
