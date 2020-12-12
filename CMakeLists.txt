@@ -20,7 +20,7 @@ function(update_git_submodule _PATH)
 	execute_process(COMMAND git submodule update --init --recursive ${_PATH} WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
 endfunction()
 
-#update_git_submodule("3rdparty/")
+update_git_submodule("3rdparty/")
 
 set(CMAKE_MODULE_PATH ${VPD_ROOT_PATH}/cmake)
 
