@@ -1,22 +1,4 @@
 ################################################################################
-# Generate/update/build all 3rdparty and dependency projects
-################################################################################
-
-function(updateSubmodule workingRelativeDirectory submodulePath)
-execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init ${submodulePath}
-                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/${workingRelativeDirectory}
-                    RESULT_VARIABLE GIT_SUBMOD_RESULT)
-					
-if(NOT GIT_SUBMOD_RESULT EQUAL "0")
-	message(FATAL_ERROR "git submodule update --init failed with ${GIT_SUBMOD_RESULT}, please checkout submodules")
-endif()
-endfunction()
-
-#execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init
-#                    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-#                    RESULT_VARIABLE GIT_SUBMOD_RESULT)
-
-################################################################################
 # Global configuration types
 ################################################################################
 set(CMAKE_CONFIGURATION_TYPES
