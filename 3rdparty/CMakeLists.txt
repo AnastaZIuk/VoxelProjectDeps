@@ -115,36 +115,15 @@ ExternalProject_Add(flann
 	USES_TERMINAL_INSTALL 1
 )
 
-# patched setup is placed in the PCL's cmake since it is a fork (contains options, boost, flann and eigen dirs)
-add_subdirectory(${VPD_ROOT_PATH}/3rdparty/pcl/pcl ${VPD_ROOT_PATH}/3rdparty/pcl/pcl)
-
-set(3RDPARTY_PCL_TARGETS
-	pcl_common												
-	pcl_filters										
-	pcl_kdtree									
-	pcl_surface			
-	pcl_search
+ExternalProject_Add(PCL
+	DOWNLOAD_COMMAND  ""
+	SOURCE_DIR        "${VPD_ROOT_PATH}/3rdparty/pcl/pcl"
+	BINARY_DIR        "${VPD_ROOT_PATH}/3rdparty/pcl/pcl/build"
+	BUILD_COMMAND	  cmake --build "${VPD_ROOT_PATH}/3rdparty/pcl/pcl/build" --config Release --target pcl_filters --target pcl_kdtree --target pcl_surface --target pcl_search
+	INSTALL_COMMAND   cmake --install "${VPD_ROOT_PATH}/3rdparty/pcl/pcl/build" --prefix "${VPD_ROOT_PATH}/3rdparty/pcl/pcl/build/install" || EXIT /B 0 # since there are still issues with static compiling on latest tags of PCL, I have to override exit status
+	TEST_COMMAND      ""
+	USES_TERMINAL_BUILD 1
+	USES_TERMINAL_INSTALL 1
 )
 
-foreach(trgt IN LISTS 3RDPARTY_PCL_TARGETS)
-		set_property(TARGET ${trgt} PROPERTY
-             MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
-endforeach()
-
-add_custom_target(PCL)
-add_custom_target(PCL_INSTALL
-	COMMAND cmake --install "build/" --prefix "build/install/" || EXIT /B 0 # since there are still issues with static compiling on latest tags of PCL, I have to override exit status
-	WORKING_DIRECTORY ${VPD_ROOT_PATH}/3rdparty/pcl/pcl
-	USES_TERMINAL
-	VERBATIM
-)
-
-add_dependencies(PCL
-	eigen3
-	flann
-	pcl_filters										
-	pcl_kdtree									
-	pcl_surface			
-	pcl_search
-	PCL_INSTALL
-)
+add_dependencies(PCL eigen3 flann)
