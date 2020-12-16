@@ -7,3 +7,12 @@
 [submodule "3rdparty/boost/boost"]
 	path = 3rdparty/boost/boost
 	url = https://github.com/boostorg/boost
+[submodule "3rdparty/flann/flann"]
+	path = 3rdparty/flann/flann
+	url = https://github.com/mariusmuja/flann
+[submodule "3rdparty/eigen/eigen"]
+	path = 3rdparty/eigen/eigen
+	url = https://gitlab.com/libeigen/eigen
+[submodule "3rdparty/pcl/pcl"]
+	path = 3rdparty/pcl/pcl
+	url = https://github.com/AnastaZIuk/pcl
