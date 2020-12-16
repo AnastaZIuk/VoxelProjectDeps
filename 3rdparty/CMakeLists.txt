@@ -29,10 +29,9 @@ set(CMAKE_CONFIGURATION_TYPES
 # Global compiler options
 ################################################################################
 if(MSVC)
-    # remove default flags provided with CMake for MSVC
     set(CMAKE_CXX_FLAGS "")
-    set(CMAKE_CXX_FLAGS_DEBUG "")
-    set(CMAKE_CXX_FLAGS_RELEASE "")
+    set(CMAKE_CXX_FLAGS_DEBUG "/MTd /Zi /Ob0 /Od /RTC1" CACHE STRING "" FORCE)
+    set(CMAKE_CXX_FLAGS_RELEASE "/MT /O2 /Ob2 /DNDEBUG" CACHE STRING "" FORCE)
 endif()
 
 ################################################################################
@@ -97,3 +96,55 @@ ExternalProject_Add(liblaszip
 )
 
 add_dependencies(liblas liblaszip boost)
+
+ExternalProject_Add(eigen3
+	DOWNLOAD_COMMAND  ""
+	SOURCE_DIR        "${VPD_ROOT_PATH}/3rdparty/eigen/eigen"
+	BINARY_DIR        "${VPD_ROOT_PATH}/3rdparty/eigen/eigen/build"
+	INSTALL_COMMAND   cmake --install "${VPD_ROOT_PATH}/3rdparty/eigen/eigen/build" --prefix "${VPD_ROOT_PATH}/3rdparty/eigen/eigen/build/install"
+	TEST_COMMAND      ""
+	USES_TERMINAL_INSTALL 1
+)
+
+ExternalProject_Add(flann
+	DOWNLOAD_COMMAND  ""
+	SOURCE_DIR        "${VPD_ROOT_PATH}/3rdparty/flann/flann"
+	BINARY_DIR        "${VPD_ROOT_PATH}/3rdparty/flann/flann/build"
+	INSTALL_COMMAND   cmake --install "${VPD_ROOT_PATH}/3rdparty/flann/flann/build" --prefix "${VPD_ROOT_PATH}/3rdparty/flann/flann/install"
+	TEST_COMMAND      ""
+	USES_TERMINAL_INSTALL 1
+)
+
+# patched setup is placed in the PCL's cmake since it is a fork (contains options, boost, flann and eigen dirs)
+add_subdirectory(${VPD_ROOT_PATH}/3rdparty/pcl/pcl ${VPD_ROOT_PATH}/3rdparty/pcl/pcl)
+
+set(3RDPARTY_PCL_TARGETS
+	pcl_common												
+	pcl_filters										
+	pcl_kdtree									
+	pcl_surface			
+	pcl_search
+)
+
+foreach(trgt IN LISTS 3RDPARTY_PCL_TARGETS)
+		set_property(TARGET ${trgt} PROPERTY
+             MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endforeach()
+
+add_custom_target(PCL)
+add_custom_target(PCL_INSTALL
+	COMMAND cmake --install "build/" --prefix "build/install/" || EXIT /B 0 # since there are still issues with static compiling on latest tags of PCL, I have to override exit status
+	WORKING_DIRECTORY ${VPD_ROOT_PATH}/3rdparty/pcl/pcl
+	USES_TERMINAL
+	VERBATIM
+)
+
+add_dependencies(PCL
+	eigen3
+	flann
+	pcl_filters										
+	pcl_kdtree									
+	pcl_surface			
+	pcl_search
+	PCL_INSTALL
+)
