@@ -43,3 +43,23 @@ endif()
 ################################################################################
 
 add_subdirectory(3rdparty/)
+
+set(_CONFIG_BUILD_FILE_ ${VPD_ROOT_PATH}/config/BuildConfigOptions.h)
+set(_DLL_LIBLAS_DIR_ ${VPD_ROOT_PATH}/3rdparty/liblas/liblas/build/bin)
+set(_DLL_LIBLASZIP_DIR_ ${VPD_ROOT_PATH}/3rdparty/liblaszip/liblaszip/build/bin)
+set(_DLL_PCL_DIR_ ${VPD_ROOT_PATH}/3rdparty/pcl/pcl/build/install/bin)
+
+set(_PCL_LIBLAS_DLL_DIRS_DYNAMIC_LINKING_
+	"${_DLL_LIBLAS_DIR_}/Release/liblas.dll"
+	"${_DLL_LIBLAS_DIR_}/Debug/liblasd.dll"
+	"${_DLL_LIBLASZIP_DIR_}/Release/laszip.dll"
+	"${_DLL_LIBLASZIP_DIR_}/Debug/laszipd.dll"
+	"${_DLL_PCL_DIR_}/pcl_common.dll"
+	"${_DLL_PCL_DIR_}/pcl_kdtree.dll"
+	"${_DLL_PCL_DIR_}/pcl_octree.dll"
+	"${_DLL_PCL_DIR_}/pcl_surface.dll"
+	"${_DLL_PCL_DIR_}/pcl_search.dll"
+)
+
+get_filename_component(_DLL_INSTALL_ "../../../super_secret_cpu-gpu_reseach/PointCloud2DistanceField/bin" ABSOLUTE)
+install(FILES ${_PCL_LIBLAS_DLL_DIRS_DYNAMIC_LINKING_} DESTINATION ${_DLL_INSTALL_} OPTIONAL)

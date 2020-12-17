@@ -30,8 +30,8 @@ set(CMAKE_CONFIGURATION_TYPES
 ################################################################################
 if(MSVC)
     set(CMAKE_CXX_FLAGS "")
-    set(CMAKE_CXX_FLAGS_DEBUG "/MTd /Zi /Ob0 /Od /RTC1" CACHE STRING "" FORCE)
-    set(CMAKE_CXX_FLAGS_RELEASE "/MT /O2 /Ob2 /DNDEBUG" CACHE STRING "" FORCE)
+    set(CMAKE_CXX_FLAGS_DEBUG "")
+    set(CMAKE_CXX_FLAGS_RELEASE "")
 endif()
 
 ################################################################################
@@ -97,6 +97,7 @@ ExternalProject_Add(liblaszip
 
 add_dependencies(liblas liblaszip boost)
 
+# PCL and deps are dynamically linked, to many errors on static..
 ExternalProject_Add(eigen3
 	DOWNLOAD_COMMAND  ""
 	SOURCE_DIR        "${VPD_ROOT_PATH}/3rdparty/eigen/eigen"
@@ -119,7 +120,7 @@ ExternalProject_Add(PCL
 	DOWNLOAD_COMMAND  ""
 	SOURCE_DIR        "${VPD_ROOT_PATH}/3rdparty/pcl/pcl"
 	BINARY_DIR        "${VPD_ROOT_PATH}/3rdparty/pcl/pcl/build"
-	BUILD_COMMAND	  cmake --build "${VPD_ROOT_PATH}/3rdparty/pcl/pcl/build" --config Release --target pcl_filters --target pcl_kdtree --target pcl_surface --target pcl_search
+	BUILD_COMMAND	  cmake --build "${VPD_ROOT_PATH}/3rdparty/pcl/pcl/build" --config Release --target pcl_common --target pcl_filters --target pcl_kdtree --target pcl_octree --target pcl_search --target pcl_surface 
 	INSTALL_COMMAND   cmake --install "${VPD_ROOT_PATH}/3rdparty/pcl/pcl/build" --prefix "${VPD_ROOT_PATH}/3rdparty/pcl/pcl/build/install" || EXIT /B 0 # since there are still issues with static compiling on latest tags of PCL, I have to override exit status
 	TEST_COMMAND      ""
 	USES_TERMINAL_BUILD 1
