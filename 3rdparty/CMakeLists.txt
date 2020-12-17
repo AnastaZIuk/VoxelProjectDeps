@@ -120,10 +120,8 @@ ExternalProject_Add(PCL
 	DOWNLOAD_COMMAND  ""
 	SOURCE_DIR        "${VPD_ROOT_PATH}/3rdparty/pcl/pcl"
 	BINARY_DIR        "${VPD_ROOT_PATH}/3rdparty/pcl/pcl/build"
-	BUILD_COMMAND	  cmake --build "${VPD_ROOT_PATH}/3rdparty/pcl/pcl/build" --config Release --target pcl_common --target pcl_filters --target pcl_kdtree --target pcl_octree --target pcl_search --target pcl_surface 
 	INSTALL_COMMAND   cmake --install "${VPD_ROOT_PATH}/3rdparty/pcl/pcl/build" --prefix "${VPD_ROOT_PATH}/3rdparty/pcl/pcl/build/install" || EXIT /B 0 # since there are still issues with static compiling on latest tags of PCL, I have to override exit status
 	TEST_COMMAND      ""
-	USES_TERMINAL_BUILD 1
 	USES_TERMINAL_INSTALL 1
 )
 
