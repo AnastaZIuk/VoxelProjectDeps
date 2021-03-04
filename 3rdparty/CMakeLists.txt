@@ -11,7 +11,6 @@ set(CMAKE_CONFIGURATION_TYPES
 # Global compiler options
 ################################################################################
 if(MSVC)
-    # remove default flags provided with CMake for MSVC
     set(CMAKE_CXX_FLAGS "")
     set(CMAKE_CXX_FLAGS_DEBUG "")
     set(CMAKE_CXX_FLAGS_RELEASE "")
@@ -79,3 +78,33 @@ ExternalProject_Add(liblaszip
 )
 
 add_dependencies(liblas liblaszip boost)
+
+# PCL and deps are dynamically linked, to many errors on static..
+ExternalProject_Add(eigen3
+	DOWNLOAD_COMMAND  ""
+	SOURCE_DIR        "${VPD_ROOT_PATH}/3rdparty/eigen/eigen"
+	BINARY_DIR        "${VPD_ROOT_PATH}/3rdparty/eigen/eigen/build"
+	INSTALL_COMMAND   cmake --install "${VPD_ROOT_PATH}/3rdparty/eigen/eigen/build" --prefix "${VPD_ROOT_PATH}/3rdparty/eigen/eigen/build/install"
+	TEST_COMMAND      ""
+	USES_TERMINAL_INSTALL 1
+)
+
+ExternalProject_Add(flann
+	DOWNLOAD_COMMAND  ""
+	SOURCE_DIR        "${VPD_ROOT_PATH}/3rdparty/flann/flann"
+	BINARY_DIR        "${VPD_ROOT_PATH}/3rdparty/flann/flann/build"
+	INSTALL_COMMAND   cmake --install "${VPD_ROOT_PATH}/3rdparty/flann/flann/build" --prefix "${VPD_ROOT_PATH}/3rdparty/flann/flann/install"
+	TEST_COMMAND      ""
+	USES_TERMINAL_INSTALL 1
+)
+
+ExternalProject_Add(PCL
+	DOWNLOAD_COMMAND  ""
+	SOURCE_DIR        "${VPD_ROOT_PATH}/3rdparty/pcl/pcl"
+	BINARY_DIR        "${VPD_ROOT_PATH}/3rdparty/pcl/pcl/build"
+	INSTALL_COMMAND   cmake --install "${VPD_ROOT_PATH}/3rdparty/pcl/pcl/build" --prefix "${VPD_ROOT_PATH}/3rdparty/pcl/pcl/build/install" || EXIT /B 0 # since there are still issues with static compiling on latest tags of PCL, I have to override exit status
+	TEST_COMMAND      ""
+	USES_TERMINAL_INSTALL 1
+)
+
+add_dependencies(PCL eigen3 flann)
